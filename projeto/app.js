@@ -2,6 +2,7 @@ const express = require("express")
 const app = express()
 const port = 8080
 const path = require('path')
+require("dotenv").config()
 const db = require('../database')
 
 
@@ -42,3 +43,84 @@ app.get('/usuario/:id', (req, res) => {
         res.send(row)
     })
 })
+
+app.get('/tasks/:id', (req, res) => {
+	parametro1 = req.params.id
+  db.query("SELECT * FROM tasks WHERE id = ?", parametro1, (error, row) => {
+  	if(error) {
+    	res.json(error)
+      return
+    }
+    res.send(row)
+  })
+})
+app.get('/tasks', (req, res) => {
+  db.query("SELECT * FROM tasks ORDER BY id ASC", (error, rows) => {
+  	if(error) {
+    	console.log(error)
+      return
+    }
+    res.send(rows)
+  })
+})
+
+/////1/10
+app.post('/tasks', (req, res) => {
+  const parametros = req.body
+  console.log(parametros)
+  db.query(`INSERT INTO tasks (titulo, descricao, status) VALUES ('${parametros.titulo}', '${parametros.descricao}', '${parametros.status}')`, (error, row) => {
+  	if(error) {
+    	res.json(error)
+      return
+    }
+    res.send(row)
+  })
+});
+
+app.put('/tasks/:id', (req, res) => {
+  const parametro1 = req.body
+  console.log(parametro1)
+  db.query(`UPDATE tasks SET titulo = '${parametro1.titulo}', descricao = '${parametro1.descricao}', status = '${parametro1.status}' WHERE id = ?`, req.params.id,  (error, row) => {
+  	if(error) {
+    	res.json(error)
+      return
+    }
+    res.send(row)
+  })
+});
+
+app.delete('/tasks/:id', (req, res) =>{
+  const parametro2 = req.body
+  console.log(parametro2)
+  db.query(`DELETE FROM tasks WHERE id = ?`, req.params.id,  (error, row) => {
+  	if(error) {
+    	res.json(error)
+      return
+    }
+    res.send(row)
+  })
+})
+
+//07-10
+
+app.get('/users', (req, res) => {
+    db.query("SELECT * FROM users ORDER BY id ASC", (error, rows) => {
+        if(error) {
+          console.log(error)
+        return
+      }
+      res.send(rows)
+    })
+})
+
+app.post('/users/:id', (req, res) => {
+    const parametros = req.body
+    console.log(parametros)
+    db.query(`INSERT INTO users (nome, data_criacao, data_atualizacao) VALUES ('${parametros.nome}', '${parametros.data_criacao}', '${parametros.data_atualizacao}')`, (error, row) => {
+        if(error) {
+          res.json(error)
+        return
+      }
+      res.send(row)
+    })
+});
