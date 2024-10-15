@@ -113,10 +113,10 @@ app.get('/users', (req, res) => {
     })
 })
 
-app.post('/users/:id', (req, res) => {
-    const parametros = req.body
-    console.log(parametros)
-    db.query(`INSERT INTO users (nome, data_criacao, data_atualizacao) VALUES ('${parametros.nome}', '${parametros.data_criacao}', '${parametros.data_atualizacao}')`, (error, row) => {
+app.post('/users', (req, res) => {
+    const parametro1 = req.body
+    console.log(parametro1)
+    db.query(`INSERT INTO users (nome) VALUES ('${parametro1.titulo}')`, (error, row) => {
         if(error) {
           res.json(error)
         return
@@ -124,3 +124,29 @@ app.post('/users/:id', (req, res) => {
       res.send(row)
     })
 });
+
+//14-10
+
+app.put('/users/:id', (req, res) => {
+  const parametro1 = req.body
+  console.log(parametro1)
+  db.query(`UPDATE users SET nome = '${parametro1.titulo} ' WHERE id = ?`, req.params.id,  (error, row) => {
+  	if(error) {
+    	res.json(error)
+      return
+    }
+    res.send(row)
+  })
+});
+
+app.delete('/users/:id', (req, res) =>{
+  const parametro1 = req.body
+  console.log(parametro1)
+  db.query(`DELETE FROM users WHERE id = ?`, req.params.id,  (error, row) => {
+  	if(error) {
+    	res.json(error)
+      return
+    }
+    res.send(row)
+  })
+})
